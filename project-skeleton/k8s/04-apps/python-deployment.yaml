@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-python
+  namespace: apps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-python
+  template:
+    metadata:
+      labels:
+        app: backend-python
+    spec:
+      containers:
+      - name: backend-python
+        image: lab-backend-python:latest
+        imagePullPolicy: Never # Usa la imagen local de la P2
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DB_HOST
+          value: "postgres.database.svc.cluster.local" # Nombre DNS interno de k8s
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_NAME
+          value: "trainingdb"
+        - name: DB_USER
+          value: "training"
+        - name: DB_PASSWORD
+          value: "trainingpwd"
